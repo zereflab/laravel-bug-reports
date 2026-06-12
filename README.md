@@ -17,46 +17,74 @@ This package replaces noisy default Slack log messages with a clean parent alert
 - Test command that fails loudly when Slack config is wrong
 - Designed for future Discord support
 
-## Installation
+## Getting Started
+
+### 1. Install the package
 
 ```bash
 composer require zereflab/laravel-bug-reports
 ```
 
-Publish the config:
+### 2. Publish the config
 
 ```bash
 php artisan vendor:publish --tag=bug-reports-config
 ```
 
-Run the migrations:
+### 3. Run the migrations
 
 ```bash
 php artisan migrate
 ```
 
-Set Laravel to use the package log channel:
+### 4. Connect Slack
+
+Install the pre-built **LaravelBugBot** Slack app into your workspace — no Slack app creation needed:
+
+**[➡ Add to Slack](https://laravelbugbot.com/integrations/slack/install)**
+
+```text
+https://laravelbugbot.com/integrations/slack/install
+```
+
+After authorizing, you'll see your bot token and workspace details on screen. Paste them into your `.env`:
 
 ```env
 LOG_CHANNEL=bug_reports
+
+BUG_REPORTS_SLACK_APP_MODE=managed
+BUG_REPORTS_SLACK_BOT_TOKEN=xoxb-generated-token
+BUG_REPORTS_SLACK_CHANNEL=C1234567890
+BUG_REPORTS_SLACK_ACTIONS_ENABLED=false
 ```
+
+Use the channel ID (starts with `C`), not the channel name. To find it: open the channel in Slack, click its name, and scroll to the bottom of the About tab.
+
+Then invite the bot to your channel in Slack:
+
+```text
+/invite @LaravelBugBot
+```
+
+> With the pre-built app, manage error statuses from the built-in dashboard (`BUG_REPORTS_SLACK_ACTIONS_ENABLED=false` hides the Slack buttons, which require your own Slack app).
+
+### 5. Test your setup
+
+```bash
+php artisan bug-reports:test
+```
+
+You should see the test exception arrive in your Slack channel. That's it — every exception in your app now lands in Slack, organized.
+
+## Want To Use Your Own Slack Application?
+
+If you prefer to create and control your own Slack app (required for the Slack `Solved` / `Ignore` buttons), follow the separate guide:
+
+**[➡ Use Your Own Slack App](docs/use-your-own-slack-app.md)**
 
 ## Environment Variables
 
-Minimum Slack setup:
-
-```env
-LOG_CHANNEL=bug_reports
-
-BUG_REPORTS_SLACK_BOT_TOKEN=xoxb-your-token
-BUG_REPORTS_SLACK_CHANNEL=C1234567890
-BUG_REPORTS_SLACK_SIGNING_SECRET=your-signing-secret
-
-BUG_REPORTS_LEVEL=error
-BUG_REPORTS_THROTTLE_MINUTES=5
-```
-
-Optional:
+Defaults shown below — override only what you need:
 
 ```env
 BUG_REPORTS_REPORTER=slack
@@ -84,78 +112,6 @@ After changing config:
 php artisan config:clear
 php artisan config:cache
 ```
-
-## Slack App Setup
-
-You can connect Slack two ways: install our pre-built Slack app (fastest), or create your own.
-
-### Option A: Install Our Pre-Built Slack App (Recommended)
-
-No Slack app creation needed. Install the LaravelBugBot Slack app into your workspace:
-
-**[➡ Add to Slack](https://laravelbugbot.com/integrations/slack/install)**
-
-```text
-https://laravelbugbot.com/integrations/slack/install
-```
-
-Or use the direct Slack authorization link:
-
-```text
-https://slack.com/oauth/v2/authorize?client_id=11349090337284.11339140816003&scope=chat:write,chat:write.customize&user_scope=
-```
-
-After authorizing, you'll see your bot token and workspace details. Paste them into your `.env`:
-
-```env
-BUG_REPORTS_SLACK_APP_MODE=managed
-BUG_REPORTS_SLACK_BOT_TOKEN=xoxb-generated-token
-BUG_REPORTS_SLACK_CHANNEL=C1234567890
-```
-
-Then invite the bot to your channel in Slack:
-
-```text
-/invite @LaravelBugBot
-```
-
-> **Note:** With the pre-built app, the Slack `Solved` / `Ignore` buttons are not yet supported, because button clicks are delivered to the app owner, not to your application. Disable them with `BUG_REPORTS_SLACK_ACTIONS_ENABLED=false` and manage statuses from the built-in dashboard instead. Bring your own Slack app (Option B) if you want the buttons today.
-
-### Option B: Bring Your Own Slack App
-
-1. Create an app at <https://api.slack.com/apps>.
-2. Add bot token scopes:
-   - `chat:write`
-   - `chat:write.customize` (only if you customize the alert username/emoji)
-3. Install the app to your workspace.
-4. Invite the bot to the target channel.
-5. Copy the bot token into `BUG_REPORTS_SLACK_BOT_TOKEN`.
-6. Copy the channel ID into `BUG_REPORTS_SLACK_CHANNEL`.
-7. Copy the signing secret into `BUG_REPORTS_SLACK_SIGNING_SECRET`.
-
-## Slack Interactivity (Own App Only)
-
-For the `Solved` / `Ignore` buttons, enable Interactivity in your Slack app and set the Request URL to your application:
-
-```text
-https://your-domain.com/bug-reports/slack/actions
-```
-
-If you changed `BUG_REPORTS_ROUTE_PREFIX`, update the URL accordingly.
-
-## Test Your Setup
-
-```bash
-php artisan bug-reports:test
-```
-
-Custom message:
-
-```bash
-php artisan bug-reports:test --message="Production Slack test"
-```
-
-The command uses the real package log channel. Unlike production logging, it throws Slack API failures so you can fix config issues quickly.
 
 ## What The Slack Alert Looks Like
 
