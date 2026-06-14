@@ -1,4 +1,16 @@
-# Laravel Bug Reports
+<p align="center">
+    <a href="https://laravelbugbot.com">
+        <img src="https://laravelbugbot.com/images/logo.png" alt="Laravel Bug Bot" width="360">
+    </a>
+</p>
+
+<p align="center">
+    <a href="https://packagist.org/packages/zereflab/laravel-bug-bot"><img alt="Packagist Version" src="https://img.shields.io/packagist/v/zereflab/laravel-bug-bot?style=for-the-badge"></a>
+    <a href="https://packagist.org/packages/zereflab/laravel-bug-bot"><img alt="Packagist Downloads" src="https://img.shields.io/packagist/dt/zereflab/laravel-bug-bot?style=for-the-badge"></a>
+    <a href="LICENSE.md"><img alt="License" src="https://img.shields.io/badge/license-MIT-2ed573?style=for-the-badge"></a>
+</p>
+
+# Laravel Bug Bot
 
 Organized Laravel exception reports for Slack.
 
@@ -39,11 +51,15 @@ php artisan migrate
 
 ### 4. Connect Slack
 
-Install the pre-built **LaravelBugBot** Slack app into your workspace — no Slack app creation needed:
+Install the pre-built **Laravel Bug Bot** Slack app into your workspace — no Slack app creation needed:
 
-```text
-https://laravelbugbot.com/integrations/slack/install
-```
+<p>
+    <a href="https://laravelbugbot.com/integrations/slack/install">
+        <img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x">
+    </a>
+</p>
+
+Direct install URL: <https://laravelbugbot.com/integrations/slack/install>
 
 After installation, the success page shows a managed bot token. Paste the generated values into your `.env`:
 
@@ -61,27 +77,44 @@ BUG_REPORTS_SLACK_ACTIONS_ENABLED=true
 
 Slack requires you to add the installed app to the channel before it can post alerts there.
 
-1. Click the channel name at the top of your Slack channel.
-
-   ![Click the Slack channel name](docs/images/slack-install/01-click-channel-name.png)
-
-2. Open the **Integrations** tab in the channel details modal.
-
-   ![Open the Integrations tab](docs/images/slack-install/02-open-integrations.png)
-
-3. In the Apps section, click **Add an App**.
-
-   ![Click Add an App](docs/images/slack-install/03-add-app.png)
-
-4. Find **Laravel Bug Bot** and click **Add**.
-
-   ![Add Laravel Bug Bot](docs/images/slack-install/04-add-laravel-bug-bot.png)
+<table>
+    <tr>
+        <td width="50%">
+            <strong>1. Click the channel name</strong><br>
+            Open your Slack channel and click the channel name at the top.
+            <br><br>
+            <img src="docs/images/slack-install/01-click-channel-name.png" alt="Click the Slack channel name">
+        </td>
+        <td width="50%">
+            <strong>2. Open Integrations</strong><br>
+            In the channel details modal, open the <strong>Integrations</strong> tab.
+            <br><br>
+            <img src="docs/images/slack-install/02-open-integrations.png" alt="Open the Integrations tab">
+        </td>
+    </tr>
+    <tr>
+        <td width="50%">
+            <strong>3. Click Add an App</strong><br>
+            In the Apps section, click <strong>Add an App</strong>.
+            <br><br>
+            <img src="docs/images/slack-install/03-add-app.png" alt="Click Add an App">
+        </td>
+        <td width="50%">
+            <strong>4. Add Laravel Bug Bot</strong><br>
+            Find <strong>Laravel Bug Bot</strong> and click <strong>Add</strong>.
+            <br><br>
+            <img src="docs/images/slack-install/04-add-laravel-bug-bot.png" alt="Add Laravel Bug Bot to Slack">
+        </td>
+    </tr>
+</table>
 
 ### 6. Copy the Slack channel ID
 
 Copy the Channel ID from Slack, then replace the placeholder in `BUG_REPORTS_SLACK_CHANNEL`.
 
-![Copy the Channel ID](docs/images/slack-install/05-copy-channel-id.png)
+<p>
+    <img src="docs/images/slack-install/05-copy-channel-id.png" alt="Copy the Channel ID from Slack">
+</p>
 
 The channel value is the channel **ID**, not the channel name.
 
