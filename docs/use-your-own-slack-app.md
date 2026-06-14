@@ -70,6 +70,8 @@ BUG_REPORTS_ROUTE_PREFIX=bug-reports
 BUG_REPORTS_ROUTE_MIDDLEWARE=api
 ```
 
+The package also registers compatibility aliases for common path mistakes, including `/bugs-report/slack/actions`, `/bug-report/slack/actions`, `/bugs-reports/slack/actions`, and `/{BUG_REPORTS_DASHBOARD_PATH}/slack/actions`. If Slack reaches Laravel but your signing secret is missing or wrong, the endpoint returns `401 Invalid signature` instead of `404`.
+
 Keep the buttons enabled in your `.env`:
 
 ```env

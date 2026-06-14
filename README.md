@@ -174,6 +174,7 @@ BUG_REPORTS_LOG_CHANNEL=bug_reports
 BUG_REPORTS_CACHE_PREFIX=bug-reports
 BUG_REPORTS_SLACK_APP_MODE=own
 BUG_REPORTS_SLACK_INSTALL_URL=https://laravelbugbot.com/integrations/slack/install
+BUG_REPORTS_SLACK_SIGNING_SECRET=
 BUG_REPORTS_SLACK_USERNAME="${APP_NAME}"
 BUG_REPORTS_SLACK_EMOJI=:boom:
 BUG_REPORTS_SLACK_ACTIONS_ENABLED=true
@@ -246,6 +247,17 @@ POST /bug-reports/slack/actions
 ```
 
 By default this route uses the `api` middleware and is also registered without Laravel's CSRF middleware, because Slack cannot send a Laravel CSRF token. You should not add this route manually.
+
+To avoid 404s from the common dashboard/action URL mismatch, the package also registers compatibility aliases:
+
+```text
+POST /bugs-report/slack/actions
+POST /bug-report/slack/actions
+POST /bugs-reports/slack/actions
+POST /{BUG_REPORTS_DASHBOARD_PATH}/slack/actions
+```
+
+If Slack reaches Laravel but `BUG_REPORTS_SLACK_SIGNING_SECRET` is missing or wrong, the endpoint returns `401 Invalid signature` instead of `404`.
 
 If you use your own Slack app and want Slack `Solved` / `Ignore` buttons, set the Slack app's **Interactivity Request URL** to your deployed Laravel app:
 

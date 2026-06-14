@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\ServiceProvider;
 use Zereflab\LaravelBugReports\Commands\TestBugReportCommand;
+use Zereflab\LaravelBugReports\Http\Controllers\SlackActionController;
 use Zereflab\LaravelBugReports\Logging\BugReportLogger;
 
 class BugReportsServiceProvider extends ServiceProvider
@@ -72,6 +74,15 @@ class BugReportsServiceProvider extends ServiceProvider
             'prefix' => config('bug-reports.routes.prefix', 'bug-reports'),
             'middleware' => config('bug-reports.routes.middleware', ['api']),
         ], fn () => $this->loadRoutesFrom(__DIR__.'/../routes/api.php'));
+
+        foreach ($this->slackActionPrefixAliases() as $prefix) {
+            Route::group([
+                'prefix' => $prefix,
+                'middleware' => config('bug-reports.routes.middleware', ['api']),
+            ], fn () => $this->withoutCsrf(
+                Route::post('slack/actions', SlackActionController::class)
+            ));
+        }
     }
 
     private function registerDashboardRoutes(): void
@@ -97,5 +108,41 @@ class BugReportsServiceProvider extends ServiceProvider
         // Deny by default. Applications must define the gate themselves or
         // allowlist user IDs via BUG_REPORTS_DASHBOARD_USER_IDS.
         Gate::define($ability, fn ($user = null): bool => false);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function slackActionPrefixAliases(): array
+    {
+        $canonical = $this->normalizePrefix(config('bug-reports.routes.prefix', 'bug-reports'));
+
+        return collect([
+            config('bug-reports.dashboard.path', 'bugs-report'),
+            'bugs-report',
+            'bug-report',
+            'bugs-reports',
+        ])
+            ->map(fn (mixed $prefix): string => $this->normalizePrefix($prefix))
+            ->filter(fn (string $prefix): bool => $prefix !== '' && $prefix !== $canonical)
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function normalizePrefix(mixed $prefix): string
+    {
+        return trim((string) $prefix, '/');
+    }
+
+    private function withoutCsrf(RoutingRoute $route): void
+    {
+        if (! class_exists(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class)) {
+            return;
+        }
+
+        $route->withoutMiddleware([
+            \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
+        ]);
     }
 }

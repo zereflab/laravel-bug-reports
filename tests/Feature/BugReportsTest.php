@@ -243,6 +243,18 @@ class BugReportsTest extends TestCase
         ]);
     }
 
+    public function test_slack_action_compatibility_aliases_are_registered(): void
+    {
+        foreach ([
+            '/bug-reports/slack/actions',
+            '/bugs-report/slack/actions',
+            '/bug-report/slack/actions',
+            '/bugs-reports/slack/actions',
+        ] as $uri) {
+            $this->post($uri)->assertUnauthorized();
+        }
+    }
+
     private function postSlackAction(array $payload)
     {
         $body = http_build_query(['payload' => json_encode($payload)]);

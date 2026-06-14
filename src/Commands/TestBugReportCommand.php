@@ -59,7 +59,32 @@ class TestBugReportCommand extends Command
         }
 
         $this->components->info('Test exception sent to Slack channel '.config('bug-reports.slack.channel').'.');
+        $this->displaySlackActionInfo();
 
         return self::SUCCESS;
+    }
+
+    private function displaySlackActionInfo(): void
+    {
+        if (config('bug-reports.slack.app_mode', 'own') === 'managed') {
+            $this->components->info('Managed Slack app mode uses the dashboard for Solved / Ignore actions.');
+
+            return;
+        }
+
+        if (! config('bug-reports.slack.actions.enabled', true)) {
+            return;
+        }
+
+        $this->components->info('Slack Interactivity Request URL: '.$this->slackActionUrl());
+
+        if (blank(config('bug-reports.slack.signing_secret'))) {
+            $this->components->warn('Missing BUG_REPORTS_SLACK_SIGNING_SECRET. Slack action buttons will return 401 until it is configured.');
+        }
+    }
+
+    private function slackActionUrl(): string
+    {
+        return url(trim((string) config('bug-reports.routes.prefix', 'bug-reports'), '/').'/slack/actions');
     }
 }
