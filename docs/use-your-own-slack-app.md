@@ -54,13 +54,13 @@ BUG_REPORTS_SLACK_SIGNING_SECRET=your-signing-secret
 
 1. In the Slack app settings, open **Interactivity & Shortcuts**.
 2. Toggle **Interactivity** to On.
-3. Set the **Request URL** to your application:
+3. Set the **Request URL** to the deployed Laravel application where this package is installed:
 
 ```text
-https://your-domain.com/bug-reports/slack/actions
+https://<your-laravel-app-domain>/bug-reports/slack/actions
 ```
 
-If you changed `BUG_REPORTS_ROUTE_PREFIX`, adjust the URL accordingly. Your application must be publicly reachable at that URL.
+This URL belongs to **your Laravel application**, not `laravelbugbot.com`. If you changed `BUG_REPORTS_ROUTE_PREFIX`, adjust the path accordingly. Your application must be publicly reachable at that URL.
 
 Keep the buttons enabled in your `.env`:
 

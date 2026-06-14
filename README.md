@@ -69,7 +69,7 @@ LOG_LEVEL=error
 
 BUG_REPORTS_SLACK_APP_MODE=managed
 BUG_REPORTS_SLACK_BOT_TOKEN=xoxb-generated-token
-BUG_REPORTS_SLACK_CHANNEL="<put your channel id where you add the bot>"
+BUG_REPORTS_SLACK_CHANNEL=C1234567890
 BUG_REPORTS_SLACK_ACTIONS_ENABLED=true
 ```
 
@@ -128,11 +128,13 @@ You should see the test exception arrive in your Slack channel. That's it — ev
 
 ### 8. Authorize dashboard access
 
-The dashboard is available in your application at:
+The dashboard is served by the Laravel application where you install this package:
 
 ```text
-https://yourdomain.com/bugs-report
+/bugs-report
 ```
+
+Full dashboard documentation is available at <https://laravelbugbot.com/docs/dashboard>.
 
 Edit `app/Providers/AppServiceProvider.php` and add the dashboard gate inside the `boot()` function:
 
@@ -233,11 +235,13 @@ BUG_REPORTS_SLACK_IGNORE_TTL_DAYS=30
 
 ## Dashboard
 
-The package includes a built-in dashboard:
+The package includes a built-in dashboard served inside your Laravel application:
 
 ```text
-https://your-domain.com/bugs-report
+/bugs-report
 ```
+
+Read the full dashboard guide at <https://laravelbugbot.com/docs/dashboard>.
 
 The dashboard shows:
 
